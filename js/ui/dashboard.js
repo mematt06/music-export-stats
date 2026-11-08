@@ -115,19 +115,41 @@ function setStats(items) {
     .join("");
 }
 
+function colClass(header) {
+  const map = {
+    "#": "col-rank",
+    Sanatçı: "col-artist",
+    Albüm: "col-title",
+    Şarkı: "col-title",
+    Parça: "col-title",
+    Dk: "col-mins",
+    Oynatma: "col-plays",
+    Zaman: "col-time",
+  };
+  return map[header] || "";
+}
+
 function table(headers, rows, numIdx = []) {
   const th = headers
-    .map((h, i) => `<th class="${numIdx.includes(i) ? "num" : ""}">${h}</th>`)
+    .map((h, i) => {
+      const classes = [numIdx.includes(i) ? "num" : "", colClass(h)].filter(Boolean).join(" ");
+      return `<th class="${classes}">${h}</th>`;
+    })
     .join("");
   const body = rows
     .map(
       (r) =>
         `<tr>${r
-          .map((c, i) => `<td class="${numIdx.includes(i) ? "num" : ""}">${c ?? "—"}</td>`)
+          .map((c, i) => {
+            const classes = [numIdx.includes(i) ? "num" : "", colClass(headers[i])]
+              .filter(Boolean)
+              .join(" ");
+            return `<td class="${classes}">${c ?? "—"}</td>`;
+          })
           .join("")}</tr>`
     )
     .join("");
-  return `<table><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table>`;
+  return `<div class="table-scroll"><table><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
 function barChart(canvasId, labels, datasets, opts = {}) {
