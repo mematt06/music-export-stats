@@ -567,23 +567,27 @@ table td .track-cell {
 
 .stream-summary-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
   margin-top: 6px;
-}
-@media (max-width: 720px) {
-  .stream-summary-grid { grid-template-columns: 1fr; }
+  align-items: stretch;
 }
 .stream-metric {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
   background: rgba(0, 0, 0, 0.18);
   border: 1px solid var(--spotify-border);
   border-radius: 12px;
-  padding: 16px 18px;
+  padding: 14px 16px;
+  box-sizing: border-box;
 }
 .stream-metric .label {
   color: var(--muted);
   font-size: 0.8rem;
   margin-bottom: 6px;
+  line-height: 1.3;
 }
 .stream-metric .value {
   font-size: 1.55rem;
@@ -591,10 +595,8 @@ table td .track-cell {
   font-variant-numeric: tabular-nums;
   color: var(--spotify);
   line-height: 1.2;
-}
-.stream-metric.hero .value {
-  font-size: 2.15rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  word-break: break-word;
 }
 .stream-metric .unit {
   font-size: 0.55em;
@@ -1133,6 +1135,20 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
     line-height: 1.3;
   }
 
+  .stream-summary-grid {
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .stream-metric {
+    padding: 12px 12px;
+    border-radius: 10px;
+  }
+
+  .stream-metric .value {
+    font-size: 1.35rem;
+  }
+
   .period-stats,
   .artist-detail-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1360,6 +1376,24 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
 
   .fl-row .track-cover {
     margin-top: 1px;
+  }
+
+  .stream-summary-grid {
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .stream-metric {
+    padding: 10px 11px;
+  }
+
+  .stream-metric .label {
+    font-size: 0.76rem;
+    margin-bottom: 4px;
+  }
+
+  .stream-metric .value {
+    font-size: 1.22rem;
   }
 
   .period-stats,

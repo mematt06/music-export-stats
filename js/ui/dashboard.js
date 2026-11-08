@@ -197,7 +197,7 @@ function streamSummaryCard(spotify) {
     ${brandTitle("spotify", "Toplam stream özeti")}
     <p class="hint">Export’taki tüm dinlemeler</p>
     <div class="stream-summary-grid">
-      <div class="stream-metric hero">
+      <div class="stream-metric">
         <div class="label">Toplam dinleme</div>
         <div class="value">${fmt(spotify.totalMin)} <span class="unit">dk</span></div>
       </div>
