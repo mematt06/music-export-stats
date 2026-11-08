@@ -133,7 +133,6 @@ function barChart(canvasId, labels, datasets, opts = {}) {
   if (!ctx) return;
   const horizontal = opts.horizontal ?? labels.length > 8;
   const stacked = !!opts.stacked;
-  const unit = opts.unit || "dk";
   const chart = new Chart(ctx, {
     type: "bar",
     data: { labels, datasets },
@@ -148,7 +147,7 @@ function barChart(canvasId, labels, datasets, opts = {}) {
             label(ctx) {
               const v = ctx.raw;
               const extra = opts.tooltipExtra?.(ctx) || "";
-              return `${ctx.dataset.label || unit}: ${fmt(v)}${extra}`;
+              return `${fmt(v)} dk${extra}`;
             },
           },
         },
@@ -454,14 +453,13 @@ function renderPeriodBody(periods, periodId) {
       artistChartLabels(p.artists),
       [
         {
-          label: "Dakika",
+          label: "Dk",
           data: p.artists.map((a) => a.value),
           backgroundColor: PASTEL.spotify.soft,
         },
       ],
       {
         horizontal: true,
-        unit: " dk",
         tooltipExtra: (ctx) => {
           const plays = p.artists[ctx.dataIndex]?.plays;
           return plays != null ? ` · ${fmt(plays)} oynatma` : "";
@@ -726,7 +724,7 @@ function renderArtistDetail(spotify, live, artist, periodId) {
       <div><span class="muted">Oynatma</span><strong>${fmt(artist.plays)}</strong></div>
       <div><span class="muted">İlk dinleme</span><strong>${escapeHtml(artist.first || "—")}</strong></div>
       <div><span class="muted">Bu dönem</span><strong>${
-        periodHit ? `${fmt(periodHit.value)} dk` : "—"
+        periodHit ? fmt(periodHit.value) : "—"
       }</strong></div>
     </div>
     ${
@@ -1018,14 +1016,13 @@ function paintLifetimeCharts(spotify) {
     artistChartLabels(spotify.artists),
     [
       {
-        label: "Dakika",
+        label: "Dk",
         data: spotify.artists.map((a) => a.value),
         backgroundColor: PASTEL.spotify.soft,
       },
     ],
     {
       horizontal: true,
-      unit: " dk",
       tooltipExtra: (ctx) => {
         const plays = spotify.artists[ctx.dataIndex]?.plays;
         return plays != null ? ` · ${fmt(plays)} oynatma` : "";
@@ -1037,7 +1034,7 @@ function paintLifetimeCharts(spotify) {
     spotify.years.map((y) => y.year),
     [
       {
-        label: "Dakika",
+        label: "Dk",
         data: spotify.years.map((y) => y.value),
         backgroundColor: PASTEL.spotify.solid,
       },

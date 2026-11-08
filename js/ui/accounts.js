@@ -27,7 +27,7 @@ export function renderAccountsPanel() {
       ? `<div class="account-identity">
           ${
             avatarUrl
-              ? `<img class="account-avatar" src="${escapeHtml(avatarUrl)}" alt="" width="80" height="80" />`
+              ? `<img class="account-avatar" src="${escapeHtml(avatarUrl)}" alt="" width="60" height="60" />`
               : `<span class="account-avatar placeholder" aria-hidden="true"></span>`
           }
           <div class="account-identity-text">

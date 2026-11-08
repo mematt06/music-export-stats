@@ -1,29 +1,29 @@
 /* Cache-bust: bump ?v= when shipping UI/parser changes so soft refresh picks them up */
-import { parseSpotifyFiles } from "./parsers/spotify.js?v=20261108042000";
-import { summarizeSpotifyExport } from "./parsers/combine.js?v=20261108042000";
+import { parseSpotifyFiles } from "./parsers/spotify.js?v=20261108043100";
+import { summarizeSpotifyExport } from "./parsers/combine.js?v=20261108043100";
 import {
   patchNowPlaying,
   renderDashboard,
   renderNowPlayingSlot,
-} from "./ui/dashboard.js?v=20261108042000";
-import { renderAccountsPanel } from "./ui/accounts.js?v=20261108042000";
+} from "./ui/dashboard.js?v=20261108043100";
+import { renderAccountsPanel } from "./ui/accounts.js?v=20261108043100";
 import {
   beginSpotifyLogin,
   handleSpotifyCallback,
   isSpotifyConnected,
-} from "./auth/spotify.js?v=20261108042000";
-import { getSpotifyProfile, setSpotifyProfile } from "./auth/config.js?v=20261108042000";
+} from "./auth/spotify.js?v=20261108043100";
+import { getSpotifyProfile, setSpotifyProfile } from "./auth/config.js?v=20261108043100";
 import {
   buildLiveApproxPeriods,
   fetchCurrentlyPlaying,
   fetchSpotifyLive,
-} from "./live/spotify.js?v=20261108042000";
+} from "./live/spotify.js?v=20261108043100";
 import {
   LOCAL_ACCOUNT_KEY,
   clearExportSummary,
   resolveExportForAccount,
   saveExportSummary,
-} from "./storage/exportCache.js?v=20261108042000";
+} from "./storage/exportCache.js?v=20261108043100";
 
 const files = { spotify: [] };
 const state = {
@@ -197,7 +197,7 @@ async function analyzeExports() {
         setStatus(realWarnings.join(" · "), false);
       } else {
         setStatus(
-          `Hazır: ${state.export.spotify.plays.toLocaleString("tr-TR")} oynatma · ${Number(state.export.spotify.totalMin).toLocaleString("tr-TR")} dk`,
+          `Hazır: ${state.export.spotify.plays.toLocaleString("tr-TR")} oynatma · ${state.export.spotify.totalMin.toLocaleString("tr-TR")} dk`,
           false
         );
       }
