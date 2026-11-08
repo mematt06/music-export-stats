@@ -463,14 +463,27 @@ footer {
 }
 
 .period-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
   margin: 8px 0 14px;
 }
+.period-stats > div {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--spotify-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  min-width: 0;
+}
 .period-stats .muted,
-.period-stats span.muted { color: var(--muted); font-size: 0.78rem; display: block; }
-.period-stats strong { font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.period-stats span.muted { color: var(--muted); font-size: 0.78rem; display: block; margin-bottom: 4px; }
+.period-stats strong {
+  display: block;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  word-break: break-word;
+}
 
 /* İlk dinleme lists (replaces En çok dinlenenler bar chart) */
 .fl-list {
@@ -479,17 +492,18 @@ footer {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
 }
 .fl-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 4px;
-  border-bottom: 1px solid rgba(143, 212, 168, 0.1);
+  padding: 12px;
+  border: 1px solid rgba(143, 212, 168, 0.22);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.16);
 }
-.fl-row:last-child { border-bottom: none; }
 .fl-main { min-width: 0; flex: 1; }
 
 /* Compact album / track cover thumbs */
@@ -896,35 +910,57 @@ table td .track-cell {
   font-size: 1.05rem;
 }
 .artist-detail-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 20px;
-  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.artist-detail-stats > div {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--spotify-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  min-width: 0;
 }
 .artist-detail-stats span.muted {
   display: block;
   font-size: 0.75rem;
   color: var(--muted);
+  margin-bottom: 4px;
 }
 .artist-detail-stats strong {
+  display: block;
   font-variant-numeric: tabular-nums;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  word-break: break-word;
 }
 .artist-detail .mini-list {
   margin: 0;
   padding: 0;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .artist-detail .mini-list li {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 5px 0;
-  border-bottom: 1px solid rgba(143, 212, 168, 0.08);
-  font-size: 0.9rem;
+  padding: 12px;
+  border: 1px solid rgba(143, 212, 168, 0.22);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.16);
+  font-size: 0.95rem;
+  min-width: 0;
 }
-.artist-detail .mini-list li:last-child { border-bottom: none; }
-.artist-detail .mini-list .muted { color: var(--muted); }
+.artist-detail .mini-list .muted {
+  color: var(--muted);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 
 .muted-label {
   color: var(--muted) !important;
@@ -985,8 +1021,8 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   }
 
   .table-scroll {
-    margin: 0 -4px;
-    padding: 0 4px;
+    margin: 0;
+    padding: 0;
   }
 
   table {
@@ -995,30 +1031,69 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   }
 
   th, td {
-    padding: 10px 8px;
+    padding: 11px 10px;
   }
 
   th {
     font-size: 0.78rem;
   }
 
-  /* Drop minutes on phones — plays stay; frees title/artist room */
-  th.col-mins,
-  td.col-mins {
-    display: none;
-  }
-
   .track-cover {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
 
   .track-cell {
     gap: 12px;
+    width: 100%;
   }
 
   .track-cell-name {
-    font-size: 0.95rem;
+    font-size: 0.98rem;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .fl-list {
+    gap: 10px;
+  }
+
+  .fl-row {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .fl-name {
+    font-size: 1rem;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .fl-artist {
+    font-size: 0.88rem;
+    white-space: normal;
+  }
+
+  .fl-date {
+    font-size: 0.9rem;
+    text-align: right;
+    line-height: 1.3;
+  }
+
+  .period-stats,
+  .artist-detail-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .artist-detail .mini-list li {
+    padding: 12px;
+    font-size: 0.98rem;
   }
 
   .artist-search input {
@@ -1056,15 +1131,180 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
     border-radius: 12px;
   }
 
-  /* Very narrow: hide secondary artist col after title (albums/tracks only) */
-  table th.col-title ~ th.col-artist,
-  table td.col-title ~ td.col-artist {
-    display: none;
+  /* Stacked card rows — one neat frame per item */
+  .table-scroll {
+    overflow: visible;
+    -webkit-overflow-scrolling: auto;
   }
 
-  th.col-plays,
-  td.col-plays {
+  table.data-table,
+  table.data-table thead,
+  table.data-table tbody,
+  table.data-table th,
+  table.data-table td,
+  table.data-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  table.data-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 1rem;
+  }
+
+  table.data-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
     white-space: nowrap;
+    border: 0;
+  }
+
+  table.data-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  table.data-table tbody tr {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--spotify-border);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.18);
+    box-sizing: border-box;
+  }
+
+  table.data-table td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid rgba(143, 212, 168, 0.12);
+    text-align: left;
+    min-width: 0;
+    line-height: 1.35;
+  }
+
+  table.data-table td:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  table.data-table td:first-child {
+    padding-top: 0;
+  }
+
+  table.data-table td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    max-width: 42%;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 550;
+    letter-spacing: 0.02em;
+    line-height: 1.35;
+    padding-top: 2px;
+  }
+
+  table.data-table td.num {
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+  }
+
+  table.data-table td.col-rank {
+    align-items: center;
+  }
+
+  table.data-table td.col-rank::before {
+    content: "#";
+  }
+
+  table.data-table td.col-title {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  table.data-table td.col-title::before {
+    max-width: none;
+    padding-top: 0;
+  }
+
+  table.data-table td.col-artist {
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  table.data-table td.col-artist::before {
+    color: var(--muted);
+  }
+
+  table.data-table td > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  table.data-table .track-cell {
+    flex: 1 1 auto;
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  table.data-table .track-cell-name {
+    text-align: left;
+    white-space: normal;
+    font-size: 1.02rem;
+    font-weight: 650;
+    line-height: 1.35;
+  }
+
+  table.data-table td.col-plays,
+  table.data-table td.col-mins,
+  table.data-table td.col-time {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    font-weight: 550;
+  }
+
+  .track-cover {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  .fl-row {
+    align-items: flex-start;
+    padding: 14px;
+  }
+
+  .fl-row .track-cover {
+    margin-top: 2px;
+  }
+
+  .period-stats,
+  .artist-detail-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .period-stats > div,
+  .artist-detail-stats > div {
+    padding: 12px;
+  }
+
+  .period-stats strong,
+  .artist-detail-stats strong {
+    font-size: 1.05rem;
   }
 
   .stats-grid {

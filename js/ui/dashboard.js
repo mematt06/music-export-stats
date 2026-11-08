@@ -144,12 +144,13 @@ function table(headers, rows, numIdx = []) {
             const classes = [numIdx.includes(i) ? "num" : "", colClass(headers[i])]
               .filter(Boolean)
               .join(" ");
-            return `<td class="${classes}">${c ?? "—"}</td>`;
+            const label = escapeHtml(headers[i] || "");
+            return `<td class="${classes}" data-label="${label}">${c ?? "—"}</td>`;
           })
           .join("")}</tr>`
     )
     .join("");
-  return `<div class="table-scroll"><table><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div>`;
+  return `<div class="table-scroll"><table class="data-table"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
 function barChart(canvasId, labels, datasets, opts = {}) {
