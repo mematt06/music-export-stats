@@ -988,17 +988,34 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 16px 14px 64px;
+    padding: 12px 12px 52px;
   }
 
   #accounts-panel {
     max-width: 100%;
     width: 100%;
+    margin: 10px 0 2px;
+  }
+
+  .accounts-compact {
+    padding: 12px;
+    gap: 10px;
   }
 
   .stats-grid {
     max-width: none;
     width: 100%;
+    gap: 8px;
+    margin: 10px 0 14px;
+  }
+
+  .stat {
+    padding: 10px 12px;
+  }
+
+  .stat .value {
+    font-size: 1.2rem;
+    margin-top: 2px;
   }
 
   section.card,
@@ -1006,18 +1023,46 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
     width: 100%;
     max-width: none;
     box-sizing: border-box;
-    padding: 14px;
-    margin-bottom: 14px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  section.card .hint {
+    margin: 0 0 8px;
+  }
+
+  section.card h3 {
+    margin: 12px 0 6px;
+  }
+
+  #sec-tops h3,
+  #sec-periods h3,
+  #sec-artist-search h3 {
+    margin-top: 10px;
   }
 
   .hero-pair {
     width: 100%;
-    gap: 12px;
+    gap: 8px;
+    margin: 12px 0 6px;
+  }
+
+  .export-drop,
+  .drop {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+
+  .now-card-actions {
+    padding-top: 8px;
+    gap: 6px;
   }
 
   .banner {
     width: 100%;
     box-sizing: border-box;
+    margin: 12px 0;
+    padding: 10px 12px;
   }
 
   .table-scroll {
@@ -1026,30 +1071,31 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   }
 
   table {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     min-width: 0;
   }
 
   th, td {
-    padding: 11px 10px;
+    padding: 8px 8px;
   }
 
   th {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
   }
 
   .track-cover {
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
+    border-radius: 7px;
   }
 
   .track-cell {
-    gap: 12px;
+    gap: 8px;
     width: 100%;
   }
 
   .track-cell-name {
-    font-size: 0.98rem;
+    font-size: 0.92rem;
     white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1058,16 +1104,18 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   }
 
   .fl-list {
-    gap: 10px;
+    gap: 6px;
+    margin-top: 2px;
   }
 
   .fl-row {
-    padding: 12px;
-    gap: 12px;
+    padding: 8px 10px;
+    gap: 8px;
+    border-radius: 10px;
   }
 
   .fl-name {
-    font-size: 1rem;
+    font-size: 0.92rem;
     white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1075,12 +1123,12 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   }
 
   .fl-artist {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     white-space: normal;
   }
 
   .fl-date {
-    font-size: 0.9rem;
+    font-size: 0.84rem;
     text-align: right;
     line-height: 1.3;
   }
@@ -1088,25 +1136,42 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   .period-stats,
   .artist-detail-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 6px;
+    margin: 4px 0 8px;
+  }
+
+  .period-stats > div,
+  .artist-detail-stats > div {
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .period-stats strong,
+  .artist-detail-stats strong {
+    font-size: 1rem;
+  }
+
+  .artist-detail .mini-list {
+    gap: 6px;
   }
 
   .artist-detail .mini-list li {
-    padding: 12px;
-    font-size: 0.98rem;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    border-radius: 10px;
   }
 
   .artist-search input {
-    padding: 14px 16px;
-    font-size: 1rem;
-    min-height: 48px;
+    padding: 11px 14px;
+    font-size: 0.95rem;
+    min-height: 42px;
   }
 
   .chart-wrap {
-    height: 280px;
+    height: 240px;
   }
   .chart-wrap.tall {
-    height: 360px;
+    height: 300px;
   }
 
   .range-tabs .period-tab,
@@ -1115,23 +1180,28 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   .period-tabs-lg button {
     min-width: 0;
     flex: 1 1 auto;
-    padding: 11px 14px;
-    font-size: 0.95rem;
+    padding: 8px 10px;
+    font-size: 0.88rem;
   }
 }
 
 @media (max-width: 520px) {
   .app {
-    padding: 14px 12px 56px;
+    padding: 10px 10px 48px;
   }
 
   section.card,
   article.card {
-    padding: 12px;
-    border-radius: 12px;
+    padding: 10px;
+    border-radius: 11px;
+    margin-bottom: 8px;
   }
 
-  /* Stacked card rows — one neat frame per item */
+  section.card h3 {
+    margin: 10px 0 5px;
+  }
+
+  /* Stacked card rows — denser frames, still readable */
   .table-scroll {
     overflow: visible;
     -webkit-overflow-scrolling: auto;
@@ -1150,7 +1220,7 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   table.data-table {
     border-collapse: separate;
     border-spacing: 0;
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 
   table.data-table thead {
@@ -1168,14 +1238,14 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   table.data-table tbody {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
   }
 
   table.data-table tbody tr {
     margin: 0;
-    padding: 12px 14px;
+    padding: 9px 11px;
     border: 1px solid var(--spotify-border);
-    border-radius: 12px;
+    border-radius: 10px;
     background: rgba(0, 0, 0, 0.18);
     box-sizing: border-box;
   }
@@ -1184,13 +1254,13 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
-    padding: 8px 0;
+    gap: 10px;
+    padding: 5px 0;
     border: none;
     border-bottom: 1px solid rgba(143, 212, 168, 0.12);
     text-align: left;
     min-width: 0;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 
   table.data-table td:last-child {
@@ -1207,11 +1277,11 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
     flex: 0 0 auto;
     max-width: 42%;
     color: var(--muted);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 550;
     letter-spacing: 0.02em;
-    line-height: 1.35;
-    padding-top: 2px;
+    line-height: 1.3;
+    padding-top: 1px;
   }
 
   table.data-table td.num {
@@ -1230,7 +1300,7 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   table.data-table td.col-title {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 6px;
   }
 
   table.data-table td.col-title::before {
@@ -1240,7 +1310,7 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
 
   table.data-table td.col-artist {
     align-items: center;
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     color: var(--text);
     word-break: break-word;
   }
@@ -1264,9 +1334,9 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   table.data-table .track-cell-name {
     text-align: left;
     white-space: normal;
-    font-size: 1.02rem;
+    font-size: 0.94rem;
     font-weight: 650;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 
   table.data-table td.col-plays,
@@ -1278,45 +1348,58 @@ section.card h3 { margin: 18px 0 8px; font-size: 0.98rem; }
   }
 
   .track-cover {
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 7px;
   }
 
   .fl-row {
     align-items: flex-start;
-    padding: 14px;
+    padding: 8px 10px;
   }
 
   .fl-row .track-cover {
-    margin-top: 2px;
+    margin-top: 1px;
   }
 
   .period-stats,
   .artist-detail-stats {
     grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 2px 0 6px;
   }
 
   .period-stats > div,
   .artist-detail-stats > div {
-    padding: 12px;
+    padding: 8px 9px;
   }
 
   .period-stats strong,
   .artist-detail-stats strong {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
   }
 
   .stats-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 6px;
+    margin: 8px 0 10px;
   }
 
   .stat {
-    padding: 12px;
+    padding: 9px 10px;
   }
 
   .stat .value {
-    font-size: 1.15rem;
+    font-size: 1.08rem;
+  }
+
+  .hero-pair {
+    gap: 6px;
+    margin: 10px 0 4px;
+  }
+
+  .file-pick-btn {
+    padding: 10px 12px;
+    font-size: 0.9rem;
   }
 }

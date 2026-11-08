@@ -454,7 +454,6 @@ function renderPeriodBody(periods, periodId) {
     <div class="period-stats">
       <div><span class="muted">Toplam dk</span><strong>${fmt(p.totalMin)}</strong></div>
       <div><span class="muted">Oynatma</span><strong>${fmt(p.plays)}</strong></div>
-      <div><span class="muted">Aralık</span><strong>${escapeHtml(p.period || "—")}</strong></div>
     </div>
     ${
       (p.artists || []).length
