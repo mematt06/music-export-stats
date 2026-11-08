@@ -143,12 +143,27 @@ export function summarizePlatform(state, opts = {}) {
       };
     });
 
+  const artistCount =
+    state.artists instanceof Map
+      ? state.artists.size
+      : Array.isArray(state.artists)
+        ? state.artists.length
+        : Number(state.artistCount) || 0;
+  const trackCount =
+    state.tracks instanceof Map
+      ? state.tracks.size
+      : Array.isArray(state.tracks)
+        ? state.tracks.length
+        : Number(state.trackCount) || 0;
+
   return {
     source: state.source,
     period: state.period,
     totalMin: state.totalMin || mins(state.totalMs || 0),
     totalMs: state.totalMs || 0,
     plays: state.plays || 0,
+    artistCount,
+    trackCount,
     unit: state.unit || "minutes",
     artists,
     tracks,

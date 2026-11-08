@@ -192,6 +192,9 @@ function artistChartLabels(artists) {
 
 function streamSummaryCard(spotify) {
   if (!spotify) return "";
+  const artistCount =
+    spotify.artistCount ?? spotify.artistCatalog?.length ?? 0;
+  const trackCount = spotify.trackCount ?? 0;
   return `
   <section class="card stream-summary provider-spotify" id="sec-stream-summary">
     ${brandTitle("spotify", "Toplam stream özeti")}
@@ -204,6 +207,14 @@ function streamSummaryCard(spotify) {
       <div class="stream-metric">
         <div class="label">Toplam oynatma</div>
         <div class="value">${fmt(spotify.plays)}</div>
+      </div>
+      <div class="stream-metric">
+        <div class="label">Sanatçı</div>
+        <div class="value">${fmt(artistCount)}</div>
+      </div>
+      <div class="stream-metric">
+        <div class="label">Şarkı</div>
+        <div class="value">${fmt(trackCount)}</div>
       </div>
     </div>
   </section>`;
