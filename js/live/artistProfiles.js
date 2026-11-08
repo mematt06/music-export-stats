@@ -1,5 +1,5 @@
 import { isSpotifyConnected, spotifyFetch } from "../auth/spotify.js";
-import { norm } from "../utils.js";
+import { foldTr, norm } from "../utils.js";
 
 const CACHE_KEY = "mes_artist_profiles_v1";
 const MAX_RESOLVE = 20;
@@ -66,6 +66,34 @@ async function searchArtist(name) {
     image: a.images?.[a.images.length - 1]?.url || a.images?.[0]?.url || null,
     url: artistUrl(a.id),
   };
+}
+
+/**
+ * Live Spotify artist search (multi-hit) for the Sanatçı field when export is missing.
+ * @param {string} query
+ * @param {number} [limit=8]
+ */
+export async function searchArtists(query, limit = 8) {
+  const q = String(query || "").trim();
+  if (!q || !isSpotifyConnected()) return [];
+  const n = Math.max(1, Math.min(Number(limit) || 8, 10));
+  const data = await spotifyFetch(
+    `/search?type=artist&limit=${n}&q=${encodeURIComponent(q)}`
+  );
+  return (data?.artists?.items || [])
+    .filter((a) => a?.name)
+    .map((a) => ({
+      key: a.id || norm(a.name),
+      name: a.name,
+      fold: foldTr(a.name),
+      value: null,
+      plays: null,
+      first: "—",
+      source: "live",
+      id: a.id || null,
+      image: a.images?.[a.images.length - 1]?.url || a.images?.[0]?.url || null,
+      url: a.id ? artistUrl(a.id) : searchUrl(a.name),
+    }));
 }
 
 /**

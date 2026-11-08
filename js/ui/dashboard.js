@@ -1,11 +1,13 @@
 import { foldMatch, foldTr, fmt, norm } from "../utils.js";
 import { PASTEL, brandTitle, logoSpotify } from "./brands.js";
 import { LIVE_PERIOD_DEFS, formatMsClock } from "../live/spotify.js";
+import { isSpotifyConnected } from "../auth/spotify.js";
 import {
   artistLinkHtml,
   paintArtistLinks,
   profilesFromLive,
   resolveArtistProfiles,
+  searchArtists,
 } from "../live/artistProfiles.js";
 import {
   albumCoversFromLive,
@@ -370,14 +372,21 @@ function periodPanel({ spotify, livePeriods }) {
 }
 
 /**
- * Standalone artist lookup — sibling to Dönem / İlk dinleme.
- * @param {{ spotify?: object }} args
+ * Standalone artist lookup — always visible; export optional.
+ * @param {{ spotify?: object, connected?: boolean }} args
  */
-function artistSearchSection({ spotify }) {
-  if (!(spotify?.artistCatalog?.length || spotify?.artists?.length)) return "";
+function artistSearchSection({ spotify, connected = false }) {
+  const hasExport = !!(spotify?.artistCatalog?.length || spotify?.artists?.length);
+  let note = "";
+  if (!hasExport && connected) {
+    note = `<p class="hint meta-quiet" id="artist-search-note">Export yok — bazı bilgiler eksik olabilir</p>`;
+  } else if (!hasExport && !connected) {
+    note = `<p class="hint meta-quiet" id="artist-search-note">Export veya Spotify bağlantısı istatistikleri doldurur</p>`;
+  }
   return `
   <section class="card provider-spotify range-hero" id="sec-artist-search">
     ${brandTitle("spotify", "Sanatçı")}
+    ${note}
     <div class="artist-search" id="artist-search">
       <input type="search" id="artist-search-input" placeholder="Sanatçı ara…" autocomplete="off" />
       <ul class="artist-suggest" id="artist-suggest" role="listbox"></ul>
@@ -673,15 +682,64 @@ function bindNowPlayingActions(onNowRefresh, onReconnect) {
 }
 
 function artistCatalog(spotify) {
-  if (spotify?.artistCatalog?.length) return spotify.artistCatalog;
-  return (spotify?.artists || []).map((a) => ({
+  if (!spotify) return [];
+  if (spotify.artistCatalog?.length) return spotify.artistCatalog;
+  return (spotify.artists || []).map((a) => ({
     key: a.key || norm(a.name),
     name: a.name,
     fold: foldTr(a.name),
     value: a.value,
     plays: a.plays,
     first: a.first || spotify?.firstListenIndex?.artists?.[a.key] || "—",
+    source: "export",
   }));
+}
+
+/** Seed suggestions from live top-artists when export is absent. */
+function liveArtistCatalog(live) {
+  const out = [];
+  const seen = new Set();
+  const buckets = live?.topArtists || {};
+  for (const term of Object.keys(buckets)) {
+    for (const a of buckets[term] || []) {
+      if (!a?.name) continue;
+      const key = norm(a.name);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push({
+        key: a.id || key,
+        name: a.name,
+        fold: foldTr(a.name),
+        value: null,
+        plays: null,
+        first: "—",
+        source: "live",
+        id: a.id || null,
+        image: a.image || null,
+      });
+    }
+  }
+  return out;
+}
+
+function mergeArtistHits(primary, secondary, limit = 8) {
+  const out = [];
+  const seen = new Set();
+  for (const list of [primary, secondary]) {
+    for (const a of list || []) {
+      const key = norm(a?.name) || a?.key;
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(a);
+      if (out.length >= limit) return out;
+    }
+  }
+  return out;
+}
+
+function suggestMeta(artist) {
+  if (artist?.value != null) return `${fmt(artist.value)} dk`;
+  return "Spotify";
 }
 
 function renderArtistDetail(spotify, live, artist, periodId) {
@@ -707,10 +765,24 @@ function renderArtistDetail(spotify, live, artist, periodId) {
     .slice(0, 5);
 
   const known = profilesFromLive(live);
-  const profile = known[norm(artist.name)];
+  const profile =
+    known[norm(artist.name)] ||
+    (artist.id || artist.url
+      ? {
+          name: artist.name,
+          id: artist.id || null,
+          image: artist.image || null,
+          url: artist.url || null,
+        }
+      : null);
   const head = profile
     ? artistLinkHtml(artist.name, profile)
     : artistNameCell(artist.name);
+
+  const hasExportStats = artist.value != null || !!spotify;
+  const limitedNote = !hasExportStats
+    ? `<p class="hint meta-quiet">Export yok — dinleme istatistikleri sınırlı</p>`
+    : "";
 
   box.hidden = false;
   box.className = "artist-detail";
@@ -719,9 +791,14 @@ function renderArtistDetail(spotify, live, artist, periodId) {
       <h3>${head}</h3>
       <button type="button" class="btn-quiet" data-artist-clear>Kapat</button>
     </div>
+    ${limitedNote}
     <div class="artist-detail-stats">
-      <div><span class="muted">Toplam dk</span><strong>${fmt(artist.value)}</strong></div>
-      <div><span class="muted">Oynatma</span><strong>${fmt(artist.plays)}</strong></div>
+      <div><span class="muted">Toplam dk</span><strong>${
+        artist.value != null ? fmt(artist.value) : "—"
+      }</strong></div>
+      <div><span class="muted">Oynatma</span><strong>${
+        artist.plays != null ? fmt(artist.plays) : "—"
+      }</strong></div>
       <div><span class="muted">İlk dinleme</span><strong>${escapeHtml(artist.first || "—")}</strong></div>
       <div><span class="muted">Bu dönem</span><strong>${
         periodHit ? fmt(periodHit.value) : "—"
@@ -766,12 +843,17 @@ function renderArtistDetail(spotify, live, artist, periodId) {
 function bindArtistSearch(spotify, live, getPeriodId) {
   const input = el("artist-search-input");
   const suggest = el("artist-suggest");
-  if (!input || !suggest || !spotify) return;
+  if (!input || !suggest) return;
 
-  const catalog = artistCatalog(spotify);
+  const catalog = mergeArtistHits(
+    artistCatalog(spotify),
+    spotify ? [] : liveArtistCatalog(live),
+    500
+  );
   let timer = null;
   let active = -1;
   let hits = [];
+  let reqId = 0;
 
   const closeSuggest = () => {
     suggest.classList.remove("open");
@@ -789,7 +871,9 @@ function bindArtistSearch(spotify, live, getPeriodId) {
         (a, i) =>
           `<li><button type="button" role="option" data-idx="${i}" class="${
             i === active ? "active" : ""
-          }"><span>${escapeHtml(a.name)}</span><span class="sug-meta">${fmt(a.value)} dk</span></button></li>`
+          }"><span>${escapeHtml(a.name)}</span><span class="sug-meta">${escapeHtml(
+            suggestMeta(a)
+          )}</span></button></li>`
       )
       .join("");
     suggest.classList.add("open");
@@ -803,19 +887,48 @@ function bindArtistSearch(spotify, live, getPeriodId) {
     renderArtistDetail(spotify, live, artist, getPeriodId?.());
   };
 
+  const runSearch = async () => {
+    const q = input.value.trim();
+    const myReq = ++reqId;
+    if (q.length < 1) {
+      hits = [];
+      closeSuggest();
+      return;
+    }
+
+    const local = catalog
+      .filter((a) => foldMatch(a.name, q) || foldMatch(a.fold || "", q))
+      .slice(0, 8);
+
+    // Export catalog is authoritative when present and has matches
+    if (spotify && local.length) {
+      if (myReq !== reqId) return;
+      hits = local;
+      active = 0;
+      paintSuggest();
+      return;
+    }
+
+    let remote = [];
+    if (isSpotifyConnected()) {
+      try {
+        remote = await searchArtists(q, 8);
+      } catch {
+        remote = [];
+      }
+    }
+    if (myReq !== reqId) return;
+
+    hits = mergeArtistHits(local, remote, 8);
+    active = hits.length ? 0 : -1;
+    paintSuggest();
+  };
+
   input.addEventListener("input", () => {
     clearTimeout(timer);
     timer = setTimeout(() => {
-      const q = input.value.trim();
-      if (q.length < 1) {
-        hits = [];
-        closeSuggest();
-        return;
-      }
-      hits = catalog.filter((a) => foldMatch(a.name, q) || foldMatch(a.fold || "", q)).slice(0, 8);
-      active = hits.length ? 0 : -1;
-      paintSuggest();
-    }, 140);
+      void runSearch();
+    }, 160);
   });
 
   suggest.addEventListener("click", (e) => {
@@ -825,6 +938,10 @@ function bindArtistSearch(spotify, live, getPeriodId) {
   });
 
   input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeSuggest();
+      return;
+    }
     if (!hits.length) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -837,8 +954,6 @@ function bindArtistSearch(spotify, live, getPeriodId) {
     } else if (e.key === "Enter") {
       e.preventDefault();
       selectIdx(active >= 0 ? active : 0);
-    } else if (e.key === "Escape") {
-      closeSuggest();
     }
   });
 
@@ -923,7 +1038,7 @@ export function renderDashboard({
     ${warnHtml}
     ${streamSummaryCard(spotify)}
     ${showPeriods ? periodPanel(periodSource) : ""}
-    ${artistSearchSection({ spotify })}
+    ${artistSearchSection({ spotify, connected })}
     ${topsSectionShell({ hasExport: !!spotify?.periods, hasLive: !!live?.spotify })}
     ${platformSection("sec-spotify", "spotify", "Detaylı analiz", spotify)}
   `;

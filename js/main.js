@@ -1,29 +1,29 @@
 /* Cache-bust: bump ?v= when shipping UI/parser changes so soft refresh picks them up */
-import { parseSpotifyFiles } from "./parsers/spotify.js?v=20261108043100";
-import { summarizeSpotifyExport } from "./parsers/combine.js?v=20261108043100";
+import { parseSpotifyFiles } from "./parsers/spotify.js?v=20261108044932";
+import { summarizeSpotifyExport } from "./parsers/combine.js?v=20261108044932";
 import {
   patchNowPlaying,
   renderDashboard,
   renderNowPlayingSlot,
-} from "./ui/dashboard.js?v=20261108043100";
-import { renderAccountsPanel } from "./ui/accounts.js?v=20261108043100";
+} from "./ui/dashboard.js?v=20261108044932";
+import { renderAccountsPanel } from "./ui/accounts.js?v=20261108044932";
 import {
   beginSpotifyLogin,
   handleSpotifyCallback,
   isSpotifyConnected,
-} from "./auth/spotify.js?v=20261108043100";
-import { getSpotifyProfile, setSpotifyProfile } from "./auth/config.js?v=20261108043100";
+} from "./auth/spotify.js?v=20261108044932";
+import { getSpotifyProfile, setSpotifyProfile } from "./auth/config.js?v=20261108044932";
 import {
   buildLiveApproxPeriods,
   fetchCurrentlyPlaying,
   fetchSpotifyLive,
-} from "./live/spotify.js?v=20261108043100";
+} from "./live/spotify.js?v=20261108044932";
 import {
   LOCAL_ACCOUNT_KEY,
   clearExportSummary,
   resolveExportForAccount,
   saveExportSummary,
-} from "./storage/exportCache.js?v=20261108043100";
+} from "./storage/exportCache.js?v=20261108044932";
 
 const files = { spotify: [] };
 const state = {
@@ -44,7 +44,8 @@ function currentAccountId() {
 
 function setupDrop(id, key) {
   const box = document.getElementById(id);
-  const input = box.querySelector("input");
+  const input = box.querySelector('input[type="file"]');
+  const pickBtn = box.querySelector(".file-pick-btn");
   const status = box.querySelector(".status");
 
   const assign = (list) => {
@@ -55,7 +56,25 @@ function setupDrop(id, key) {
     updateButtons();
   };
 
-  box.addEventListener("click", () => input.click());
+  /** Open native file picker from a real user gesture (required on iOS). */
+  const openPicker = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    input.click();
+  };
+
+  // Whole drop area is tappable; ignore nested buttons / the file input itself
+  box.addEventListener("click", (e) => {
+    if (e.target.closest("button, a, input")) return;
+    openPicker(e);
+  });
+  box.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    if (e.target !== box) return;
+    openPicker(e);
+  });
+  pickBtn?.addEventListener("click", openPicker);
+
   input.addEventListener("change", () => assign(input.files));
   box.addEventListener("dragover", (e) => {
     e.preventDefault();
@@ -109,8 +128,8 @@ function mountNowPlaying() {
 
 function redraw() {
   mountNowPlaying();
-  if (!state.export.spotify && !state.live.spotify && state.nowPlaying == null) return;
   refreshLivePeriods();
+  // Always paint dashboard so Sanatçı search stays available without export
   renderDashboard({
     spotify: state.export.spotify,
     live: state.live,
@@ -310,17 +329,10 @@ async function resetAll() {
   const dropStatus = document.getElementById("export-status");
   if (dropStatus) dropStatus.textContent = "";
   document.querySelectorAll("#drop-spotify input").forEach((i) => (i.value = ""));
-  document.getElementById("dashboard").classList.add("hidden");
   document.getElementById("stats").innerHTML = "";
   setStatus("");
   updateButtons();
-  if (state.live.spotify || state.nowPlaying) {
-    refreshLivePeriods();
-    document.getElementById("dashboard").classList.remove("hidden");
-    redraw();
-  } else {
-    mountNowPlaying();
-  }
+  redraw();
 }
 
 async function boot() {
@@ -383,8 +395,7 @@ async function boot() {
     renderAccountsPanel();
   }
 
-  if (state.live.spotify || state.export.spotify) redraw();
-  else mountNowPlaying();
+  redraw();
   updateButtons();
 }
 

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Music Export Stats</title>
-    <link rel="stylesheet" href="./css/styles.css?v=20261108043100" />
+    <link rel="stylesheet" href="./css/styles.css?v=20261108044932" />
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
   </head>
@@ -31,7 +31,14 @@
 
       <section class="hero-pair" aria-label="Export ve şu an çalıyor">
         <article class="card hero-card export-card provider-spotify" id="export-card">
-          <label class="export-drop provider-spotify" id="drop-spotify">
+          <div
+            class="export-drop provider-spotify"
+            id="drop-spotify"
+            role="button"
+            tabindex="0"
+            aria-controls="file-spotify"
+            aria-label="Spotify export dosyası seç"
+          >
             <div class="drop-head">
               <svg class="brand-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="12" r="12" fill="currentColor" opacity="0.18"/>
@@ -43,8 +50,15 @@
               </div>
             </div>
             <div class="status" id="export-status"></div>
-            <input type="file" accept=".zip,.json,application/json,application/zip" multiple />
-          </label>
+            <button type="button" class="file-pick-btn" id="btn-pick-spotify">Dosya seç</button>
+            <input
+              type="file"
+              id="file-spotify"
+              class="file-input-hidden"
+              accept=".zip,.json,application/zip,application/x-zip-compressed,application/json,text/json"
+              multiple
+            />
+          </div>
           <div class="export-actions">
             <button class="primary" id="btn-analyze" disabled>Export'u analiz et</button>
             <button id="btn-reset" class="btn-quiet">Export'u sıfırla</button>
@@ -62,6 +76,6 @@
       </footer>
     </div>
 
-    <script type="module" src="./js/main.js?v=20261108043100"></script>
+    <script type="module" src="./js/main.js?v=20261108044932"></script>
   </body>
 </html>
