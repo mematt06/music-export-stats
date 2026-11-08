@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Music Export Stats</title>
+    <link rel="stylesheet" href="./css/styles.css?v=20261108042000" />
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="brand-row" aria-hidden="true">
+          <svg class="brand-mark provider-spotify" viewBox="0 0 24 24" width="22" height="22" focusable="false">
+            <circle cx="12" cy="12" r="12" fill="currentColor" opacity="0.18"/>
+            <path fill="currentColor" d="M16.8 10.6c-2.2-1.3-5.9-1.4-8-.8-.3.1-.7-.1-.8-.4-.1-.3.1-.7.4-.8 2.5-.7 6.6-.6 9.1.9.3.2.4.5.2.8-.1.3-.5.4-.9.3zm-.1 2.1c-.2.2-.4.3-.7.2-1.9-1.1-4.7-1.5-6.9-.8-.3.1-.6-.1-.7-.3-.1-.3.1-.6.3-.7 2.5-.8 5.7-.4 7.9 1 .2.1.3.4.1.6zm-.9 2c-.1.2-.3.3-.5.2-1.6-1-3.6-1.2-6-.7-.2.1-.5-.1-.5-.3-.1-.2.1-.5.3-.5 2.6-.6 4.9-.4 6.7.7.2.1.2.4.2.6z"/>
+          </svg>
+        </div>
+        <h1>Music Export Stats</h1>
+        <p class="site-credit">made by mc</p>
+      </header>
+
+      <div id="accounts-panel"></div>
+
+      <div class="banner">
+        <strong>Export nasıl alınır?</strong>
+        Spotify → account privacy → Extended streaming history →
+        <code>my_spotify_data.zip</code> veya <code>Streaming_History_Audio_*.json</code>
+      </div>
+
+      <section class="hero-pair" aria-label="Export ve şu an çalıyor">
+        <article class="card hero-card export-card provider-spotify" id="export-card">
+          <label class="export-drop provider-spotify" id="drop-spotify">
+            <div class="drop-head">
+              <svg class="brand-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="12" fill="currentColor" opacity="0.18"/>
+                <path fill="currentColor" d="M16.8 10.6c-2.2-1.3-5.9-1.4-8-.8-.3.1-.7-.1-.8-.4-.1-.3.1-.7.4-.8 2.5-.7 6.6-.6 9.1.9.3.2.4.5.2.8-.1.3-.5.4-.9.3zm-.1 2.1c-.2.2-.4.3-.7.2-1.9-1.1-4.7-1.5-6.9-.8-.3.1-.6-.1-.7-.3-.1-.3.1-.6.3-.7 2.5-.8 5.7-.4 7.9 1 .2.1.3.4.1.6zm-.9 2c-.1.2-.3.3-.5.2-1.6-1-3.6-1.2-6-.7-.2.1-.5-.1-.5-.3-.1-.2.1-.5.3-.5 2.6-.6 4.9-.4 6.7.7.2.1.2.4.2.6z"/>
+              </svg>
+              <div class="export-drop-copy">
+                <h2>Spotify export</h2>
+                <p>Zip veya Audio JSON bırak / seç</p>
+              </div>
+            </div>
+            <div class="status" id="export-status"></div>
+            <input type="file" accept=".zip,.json,application/json,application/zip" multiple />
+          </label>
+          <div class="export-actions">
+            <button class="primary" id="btn-analyze" disabled>Export'u analiz et</button>
+            <button id="btn-reset" class="btn-quiet">Export'u sıfırla</button>
+          </div>
+        </article>
+        <div class="hero-card now-playing-slot" id="now-playing-slot" aria-live="polite"></div>
+      </section>
+      <div class="error" id="error"></div>
+
+      <div class="stats-grid" id="stats"></div>
+      <div id="dashboard" class="hidden"></div>
+
+      <footer>
+        <span>Açık kaynak · MIT · Spotify PKCE · Chart.js &amp; JSZip</span>
+      </footer>
+    </div>
+
+    <script type="module" src="./js/main.js?v=20261108042000"></script>
+  </body>
+</html>
